@@ -354,15 +354,14 @@ export default function Home() {
       direction={isLargeScreen ? "" : "row-reverse"}
       justify="space-between"
       userSelect="text"
+      h="100vh"
     >
-
       {/* contains the message */}
       <Flex
         flex="1"
         position="relative"
         direction="column"
-        h="100vh"
-        width = {isLargeScreen ? "100vw" : "90%"}
+        width={isLargeScreen ? "100vw" : "90%"}
         userSelect="text"
       >
         <Box
@@ -393,7 +392,6 @@ export default function Home() {
             align="stretch"
             gap="3"
             onClick={closeSideBar}
-            
             //             onClick={(e) => {
             //   // Only close if clicking the VStack itself, not children
             //   if (e.target === e.currentTarget) {
@@ -505,19 +503,20 @@ export default function Home() {
           </Button>
         </Flex>
 
-        {/* {isLargeScreen ?
-          (isOpen && (
-            <Box
-              position="fixed"
-              top="0"
-              left="0"
-              width="100%" // Same width as your sidebar
-              height="100vh"
-              backdropFilter="blur(4px)"
-              bg="rgba(255,255,255,0.2)"
-              zIndex={5}
-            />
-          )): ""} */}
+        {isLargeScreen
+          ? isOpen && (
+              <Box
+                position="fixed"
+                top="0"
+                left="0"
+                width="100%" // Same width as your sidebar
+                height="100vh"
+                backdropFilter="blur(4px)"
+                bg="rgba(255,255,255,0.2)"
+                zIndex={5}
+              />
+            )
+          : ""}
       </Flex>
 
       {/*side bar*/}
