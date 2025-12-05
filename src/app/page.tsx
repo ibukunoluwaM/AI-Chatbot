@@ -132,6 +132,8 @@ export default function Home() {
         body: JSON.stringify({ messages }),
       });
       const data = await res.json();
+      console.log("AI response:", data);
+
       return data;
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -142,6 +144,8 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+
+
   }
 
   //generates title from message
