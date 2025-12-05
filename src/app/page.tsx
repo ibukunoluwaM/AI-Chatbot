@@ -354,7 +354,7 @@ export default function Home() {
       direction={isLargeScreen ? "" : "row-reverse"}
       justify="space-between"
       userSelect="text"
-      h="100vh"
+      h="90vh"
     >
       {/* contains the message */}
       <Flex
