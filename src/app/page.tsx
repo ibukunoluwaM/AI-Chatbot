@@ -513,7 +513,7 @@ export default function Home() {
                 height="100vh"
                 backdropFilter="blur(4px)"
                 bg="rgba(255,255,255,0.2)"
-                zIndex={5}
+          zIndex={isSmallScreen ? "3" : ""}
               />
             )
           : ""}
@@ -530,7 +530,7 @@ export default function Home() {
           width={isSmallScreen ? "65%" : "30%"}
           maxW={isSmallScreen ? "" : "25%"}
           p="4"
-          zIndex={isSmallScreen ? "3" : ""}
+          zIndex={isSmallScreen ? "5" : ""}
         >
           <Flex justify="space-between" mb="8">
             <Button onClick={createNewChat}>New Chat</Button>
