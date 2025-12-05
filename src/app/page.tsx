@@ -358,7 +358,7 @@ export default function Home() {
       justify="space-between"
       userSelect="text"
       h="100vh"
-      bg="#faf2fc"
+      bg="#e1cae8"
     >
       {/* contains the message */}
       <Flex
@@ -367,12 +367,14 @@ export default function Home() {
         direction="column"
         width={isSmallScreen ? "100vw" : "90%"}
         userSelect="text"
+
       >
         <Box
           flex="1"
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
-          width={isSmallScreen ? "100%" : "90%"}
+          maxWidth={isSmallScreen ? "100%" : "90%"}
+          height="100%"
           mx={isSmallScreen ? "none" : "auto"}
         >
           {/* menu */}
@@ -424,7 +426,7 @@ export default function Home() {
                         </Avatar.Root>
                       )}
                       <Box
-                        bg={m.role === "user" ? "black" : "#e1cae8"}
+                        bg={m.role === "user" ? "black" : "#f7edfc"}
                         color={m.role === "user" ? "white" : "black"}
                         p="3"
                         rounded="lg"
@@ -481,7 +483,7 @@ export default function Home() {
 
         {/* Input */}
         <Flex p="4" align="center" gap="2" 
-        bg="#faf2fc" borderTop="1px solid #ddd">
+        bg="#e1cae8" borderTop="1px solid #ddd">
           <Textarea
             placeholder="Type a message..."
             p="4"
@@ -529,7 +531,7 @@ export default function Home() {
           position={isSmallScreen ? "absolute" : "relative"}
           display={isSmallScreen ? "" : "block"}
           overflowY="auto"
-          bg="#f7edfc"
+          bg="#e1cae8"
           height="100vh"
           width={isSmallScreen ? "65%" : "30%"}
           maxW={isSmallScreen ? "" : "25%"}
