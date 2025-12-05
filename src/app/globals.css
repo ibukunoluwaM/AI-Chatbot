@@ -13,6 +13,10 @@
   background: black;
 }
 
+html, body {
+  color-scheme: light; /* forces light theme rendering */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

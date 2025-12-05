@@ -208,76 +208,139 @@ export default function Home() {
   }
 
   //handles sending and receiving messages
+  // async function handleSendMessage() {
+  //   if (!userMsg.trim()) return; // ignore empty messages
+
+  //   // 1. create user message object
+  //   const userMsgObj: Message = {
+  //     // id: crypto.randomUUID(),
+  //     role: "user",
+  //     content: userMsg,
+  //   };
+
+  //   // 2. update thread immediately
+  //   setThread((prev) => {
+  //     const updated = [...prev];
+  //     updated[selectedThreadIndex] = {
+  //       ...updated[selectedThreadIndex],
+  //       messages: [...updated[selectedThreadIndex].messages, userMsgObj],
+  //     };
+  //     return updated;
+  //   });
+
+  //   // 3. saves last message, for a retry incase of error
+  //   setLastMsg(userMsg);
+
+  //   // 4. clear input
+  //   setUserMsg("");
+
+  //   //5. generating title
+  //   //If this is the FIRST message, generate a title
+  //   if (currentThread.messages.length === 0) {
+  //     const title = await generateTitleFromMessage(userMsg);
+  //     setThread((prev) => {
+  //       const updated = [...prev];
+  //       updated[selectedThreadIndex] = {
+  //         ...updated[selectedThreadIndex],
+  //         title,
+  //       };
+  //       return updated;
+  //     });
+  //   }
+
+  //   // 4. send to Mistral with the correct updated array
+  //   const messagesToSend = [...currentThread.messages, userMsgObj]; // include new message
+  //   const data = await sendToMistral(messagesToSend);
+
+  //   //handles error incase data
+  //   if (!data) {
+  //     // push an AI error message instead of normal content
+  //     setError("An unexpected error occurred, please try again.");
+
+  //     return;
+  //   }
+
+  //   // 6. create AI message object
+  //   const aiResponse: Message = {
+  //     // id: crypto.randomUUID(),
+  //     role: "assistant",
+  //     content: data?.choices?.[0]?.message?.content,
+  //     // updatedAt: new Date().toISOString(),
+  //   };
+
+  //   // 7. update thread with AI response
+  //   setThread((prev) => {
+  //     const updated = [...prev];
+  //     updated[selectedThreadIndex] = {
+  //       ...updated[selectedThreadIndex],
+  //       messages: [...updated[selectedThreadIndex].messages, aiResponse],
+  //     };
+  //     return updated;
+  //   });
+  // }
+
   async function handleSendMessage() {
-    if (!userMsg.trim()) return; // ignore empty messages
+  if (!userMsg.trim()) return; // ignore empty messages
 
-    // 1. create user message object
-    const userMsgObj: Message = {
-      // id: crypto.randomUUID(),
-      role: "user",
-      content: userMsg,
-    };
+  // 1️⃣ Create the user message object
+  const userMsgObj: Message = {
+    role: "user",
+    content: userMsg,
+  };
 
-    // 2. update thread immediately
-    setThread((prev) => {
-      const updated = [...prev];
-      updated[selectedThreadIndex] = {
-        ...updated[selectedThreadIndex],
-        messages: [...updated[selectedThreadIndex].messages, userMsgObj],
-      };
-      return updated;
-    });
+  // 2️⃣ Clear input immediately
+  setUserMsg("");
 
-    // 3. saves last message, for a retry incase of error
-    setLastMsg(userMsg);
+  // 3️⃣ Prepare the updated messages array
+  const currentMessages = [...currentThread.messages, userMsgObj];
 
-    // 4. clear input
-    setUserMsg("");
-
-    //5. generating title
-    //If this is the FIRST message, generate a title
-    if (currentThread.messages.length === 0) {
-      const title = await generateTitleFromMessage(userMsg);
-      setThread((prev) => {
-        const updated = [...prev];
-        updated[selectedThreadIndex] = {
-          ...updated[selectedThreadIndex],
-          title,
-        };
-        return updated;
-      });
+  // 4️⃣ Generate title if this is the first message
+  let title = currentThread.title;
+  if (currentThread.messages.length === 0) {
+    try {
+      title = await generateTitleFromMessage(userMsg);
+    } catch {
+      title = "New Chat"; // fallback title
     }
-
-    // 4. send to Mistral with the correct updated array
-    const messagesToSend = [...currentThread.messages, userMsgObj]; // include new message
-    const data = await sendToMistral(messagesToSend);
-
-    //handles error incase data
-    if (!data) {
-      // push an AI error message instead of normal content
-      setError("An unexpected error occurred, please try again.");
-
-      return;
-    }
-
-    // 6. create AI message object
-    const aiResponse: Message = {
-      // id: crypto.randomUUID(),
-      role: "assistant",
-      content: data?.choices?.[0]?.message?.content,
-      // updatedAt: new Date().toISOString(),
-    };
-
-    // 7. update thread with AI response
-    setThread((prev) => {
-      const updated = [...prev];
-      updated[selectedThreadIndex] = {
-        ...updated[selectedThreadIndex],
-        messages: [...updated[selectedThreadIndex].messages, aiResponse],
-      };
-      return updated;
-    });
   }
+
+  // 5️⃣ Update the thread state with user message and title
+  setThread((prev) => {
+    const updated = [...prev];
+    updated[selectedThreadIndex] = {
+      ...updated[selectedThreadIndex],
+      messages: currentMessages,
+      title,
+    };
+    return updated;
+  });
+
+  // 6️⃣ Send to AI
+  let data;
+  try {
+    data = await sendToMistral(currentMessages);
+  } catch {
+    data = null;
+  }
+
+  // 7️⃣ Create AI message object (or error message)
+  const aiResponse: Message = {
+    role: "assistant",
+    content:
+      data?.choices?.[0]?.message?.content ||
+      "Sorry, I could not process your request. Please try again.",
+  };
+
+  // 8️⃣ Update thread with AI response
+  setThread((prev) => {
+    const updated = [...prev];
+    updated[selectedThreadIndex] = {
+      ...updated[selectedThreadIndex],
+      messages: [...updated[selectedThreadIndex].messages, aiResponse],
+    };
+    return updated;
+  });
+}
 
   //handles a rerun of the user's message incase of error
   async function retrySendMessage() {
@@ -407,7 +470,7 @@ export default function Home() {
           >
             {currentThread.messages.length === 0 ? (
               <Flex width="100%" align="center" justify="center" height="100vh">
-                <Box fontSize="2rem" textAlign="center" zIndex={3}>
+                <Box fontSize="2rem" textAlign="center" zIndex={3} color="black">
                   Hello, how may I help you today?
                 </Box>
               </Flex>
@@ -488,6 +551,7 @@ export default function Home() {
             placeholder="Type a message..."
             p="4"
             pl="8"
+            color="black"
             resize="none"
             rows={1}
             borderRadius="full"
@@ -501,7 +565,8 @@ export default function Home() {
             }}
           />
           <Button
-            colorScheme="blackAlpha"
+            color="white"
+            bg="black"
             disabled={!userMsg.trim()}
             onClick={handleSendMessage}
           >
@@ -543,13 +608,14 @@ export default function Home() {
             {isSmallScreen && <Button onClick={closeSideBar}>X</Button>}
           </Flex>
 
-          <Text color="gray.300">Chats</Text>
+          <Text color="black">Chats</Text>
           <List.Root cursor="pointer" listStyle="none">
             {thread.map((t, i) => (
               //added event listener for navigating threads
               <Flex key={t.id} justify="space-between" alignItems="center">
                 <ListItem
                   py="3"
+                  color="black"
                   onClick={() => {
                     setSelectedThreadIndex(i);
                     closeSideBar();
