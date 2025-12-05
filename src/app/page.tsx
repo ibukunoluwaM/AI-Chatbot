@@ -393,7 +393,7 @@ export default function Home() {
             align="stretch"
             gap="3"
             onClick={closeSideBar}
-            zIndex={10}
+            
             //             onClick={(e) => {
             //   // Only close if clicking the VStack itself, not children
             //   if (e.target === e.currentTarget) {
@@ -404,7 +404,7 @@ export default function Home() {
           >
             {currentThread.messages.length === 0 ? (
               <Flex width="100%" align="center" justify="center" height="100vh">
-                <Box fontSize="2rem" textAlign="center">
+                <Box fontSize="2rem" textAlign="center" zIndex={10}>
                   Hello, how may I help you today?
                 </Box>
               </Flex>
