@@ -63,7 +63,7 @@ export default function Home() {
   const currentThread = thread[selectedThreadIndex];
 
   //is the user's screen large/small???
-  const [isLargeScreen] = useMediaQuery(["(max-width: 800px)"]);
+  const [isSmallScreen] = useMediaQuery(["(max-width: 800px)"]);
 
   //side bar open/close
   const [isOpen, setIsOpen] = useState(false);
@@ -351,17 +351,17 @@ export default function Home() {
 
   return (
     <Flex
-      direction={isLargeScreen ? "" : "row-reverse"}
+      direction={isSmallScreen ? "" : "row-reverse"}
       justify="space-between"
       userSelect="text"
-      h="90vh"
+      h="100vh"
     >
       {/* contains the message */}
       <Flex
         flex="1"
         position="relative"
         direction="column"
-        width={isLargeScreen ? "100vw" : "90%"}
+        width={isSmallScreen ? "100vw" : "90%"}
         userSelect="text"
       >
         <Box
@@ -369,11 +369,11 @@ export default function Home() {
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
           bg="gray.50"
-          width={isLargeScreen ? "100%" : "90%"}
-          mx={isLargeScreen ? "none" : "auto"}
+          width={isSmallScreen ? "100%" : "90%"}
+          mx={isSmallScreen ? "none" : "auto"}
         >
           {/* menu */}
-          {isLargeScreen && (
+          {isSmallScreen && (
             <Box
               cursor="pointer"
               onClick={OpenSideBar}
@@ -503,7 +503,7 @@ export default function Home() {
           </Button>
         </Flex>
 
-        {isLargeScreen
+        {isSmallScreen
           ? isOpen && (
               <Box
                 position="fixed"
@@ -520,21 +520,21 @@ export default function Home() {
       </Flex>
 
       {/*side bar*/}
-      {(!isLargeScreen || isOpen) && (
+      {(!isSmallScreen || isOpen) && (
         <Box
-          position={isLargeScreen ? "absolute" : "relative"}
-          display={isLargeScreen ? "" : "block"}
+          position={isSmallScreen ? "absolute" : "relative"}
+          display={isSmallScreen ? "" : "block"}
           overflowY="auto"
           bg="gray.100"
           height="100vh"
-          width={isLargeScreen ? "65%" : "30%"}
-          maxW={isLargeScreen ? "" : "25%"}
+          width={isSmallScreen ? "65%" : "30%"}
+          maxW={isSmallScreen ? "" : "25%"}
           p="4"
-          zIndex={10}
+          zIndex={isSmallScreen ? "3" : ""}
         >
           <Flex justify="space-between" mb="8">
             <Button onClick={createNewChat}>New Chat</Button>
-            {isLargeScreen && <Button onClick={closeSideBar}>X</Button>}
+            {isSmallScreen && <Button onClick={closeSideBar}>X</Button>}
           </Flex>
 
           <Text color="gray.300">Chats</Text>
