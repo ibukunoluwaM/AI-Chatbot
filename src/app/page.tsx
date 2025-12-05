@@ -404,7 +404,7 @@ export default function Home() {
           >
             {currentThread.messages.length === 0 ? (
               <Flex width="100%" align="center" justify="center" height="100vh">
-                <Box fontSize="2rem" textAlign="center" zIndex={10}>
+                <Box fontSize="2rem" textAlign="center" zIndex={3}>
                   Hello, how may I help you today?
                 </Box>
               </Flex>
@@ -505,7 +505,7 @@ export default function Home() {
           </Button>
         </Flex>
 
-        {!isLargeScreen ?
+        {isLargeScreen ?
           (isOpen && (
             <Box
               position="fixed"
@@ -531,6 +531,7 @@ export default function Home() {
           width={isLargeScreen ? "65%" : "30%"}
           maxW={isLargeScreen ? "" : "25%"}
           p="4"
+          zIndex={10}
         >
           <Flex justify="space-between" mb="8">
             <Button onClick={createNewChat}>New Chat</Button>
