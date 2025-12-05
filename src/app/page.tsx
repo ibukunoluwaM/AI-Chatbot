@@ -125,7 +125,7 @@ export default function Home() {
 
     //stop
     try {
-      const res = await fetch("/api/mistral", {
+      const res = await fetch("/.netlify/functions/mistral", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
