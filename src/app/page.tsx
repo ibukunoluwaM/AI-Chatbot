@@ -130,8 +130,6 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ messages }),
-      }).finally(() => {
-        setLoading(false);
       });
       const data = await res.json();
       return data;
