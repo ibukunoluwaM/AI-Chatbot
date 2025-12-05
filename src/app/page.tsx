@@ -123,6 +123,7 @@ export default function Home() {
     setLoading(true); // loading spinner state
     setError("");
 
+    //stop
     try {
       const res = await fetch("/api/mistral", {
         method: "POST",
