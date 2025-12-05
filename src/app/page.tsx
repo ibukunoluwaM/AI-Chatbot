@@ -517,8 +517,8 @@ export default function Home() {
               bg="rgba(255,255,255,0.2)"
               zIndex={5}
             />
-          )): ""}
-      </Flex> */}
+          )): ""} */}
+      </Flex>
 
       {/*side bar*/}
       {(!isLargeScreen || isOpen) && (
