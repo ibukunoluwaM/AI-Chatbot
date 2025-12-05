@@ -371,7 +371,7 @@ export default function Home() {
           flex="1"
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
-          bg="gray.50"
+          bg="#0a2542"
           width={isSmallScreen ? "100%" : "90%"}
           mx={isSmallScreen ? "none" : "auto"}
         >
@@ -528,7 +528,7 @@ export default function Home() {
           position={isSmallScreen ? "absolute" : "relative"}
           display={isSmallScreen ? "" : "block"}
           overflowY="auto"
-          bg="gray.100"
+          bg="#718396"
           height="100vh"
           width={isSmallScreen ? "65%" : "30%"}
           maxW={isSmallScreen ? "" : "25%"}
