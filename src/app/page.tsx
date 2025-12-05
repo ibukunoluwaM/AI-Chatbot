@@ -506,7 +506,7 @@ export default function Home() {
           </Button>
         </Flex>
 
-        {/* {isSmallScreen
+        {isSmallScreen
           ? isOpen && (
               <Box
                 position="fixed"
@@ -519,7 +519,7 @@ export default function Home() {
           zIndex={isSmallScreen ? "3" : ""}
               />
             )
-          : ""} */}
+          : ""}
       </Flex>
 
       {/*side bar*/}
