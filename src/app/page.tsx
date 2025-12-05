@@ -504,7 +504,7 @@ export default function Home() {
           </Button>
         </Flex>
 
-        {!isLargeScreen ||
+        {!isLargeScreen ?
           (isOpen && (
             <Box
               position="fixed"
@@ -515,7 +515,7 @@ export default function Home() {
               backdropFilter="blur(4px)"
               bg="rgba(255,255,255,0.2)"
             />
-          ))}
+          )): ""}
       </Flex>
 
       {/*side bar*/}
