@@ -545,7 +545,7 @@ export default function Home() {
           <List.Root cursor="pointer" listStyle="none">
             {thread.map((t, i) => (
               //added event listener for navigating threads
-              <Flex key={t.id} justify="space-between">
+              <Flex key={t.id} justify="space-between" alignItems="center">
                 <ListItem
                   py="3"
                   onClick={() => {
