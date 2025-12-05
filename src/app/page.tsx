@@ -393,6 +393,7 @@ export default function Home() {
             align="stretch"
             gap="3"
             onClick={closeSideBar}
+            zIndex={10}
             //             onClick={(e) => {
             //   // Only close if clicking the VStack itself, not children
             //   if (e.target === e.currentTarget) {
@@ -514,6 +515,7 @@ export default function Home() {
               height="100vh"
               backdropFilter="blur(4px)"
               bg="rgba(255,255,255,0.2)"
+              zIndex={5}
             />
           )): ""}
       </Flex>
