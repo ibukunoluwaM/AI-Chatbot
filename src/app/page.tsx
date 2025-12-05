@@ -355,13 +355,14 @@ export default function Home() {
       justify="space-between"
       userSelect="text"
     >
+
       {/* contains the message */}
       <Flex
         flex="1"
         position="relative"
         direction="column"
         h="100vh"
-        maxW="90%"
+        width = {isLargeScreen ? "100vw" : "90%"}
         userSelect="text"
       >
         <Box
@@ -369,8 +370,8 @@ export default function Home() {
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
           bg="gray.50"
-          width="90%"
-          mx="auto"
+          width={isLargeScreen ? "100%" : "90%"}
+          mx={isLargeScreen ? "none" : "auto"}
         >
           {/* menu */}
           {isLargeScreen && (
