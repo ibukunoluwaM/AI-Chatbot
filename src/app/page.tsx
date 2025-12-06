@@ -419,7 +419,7 @@ export default function Home() {
       justify="space-between"
       userSelect="text"
       h="100vh"
-      bg="#0a0a0a"
+      bg="#1a1a1a"
     >
       {/* contains the message */}
       <Flex
@@ -551,14 +551,16 @@ export default function Home() {
           p="4"
           align="center"
           gap="2"
-          bg="#0a0a0a"
+          bg="#1a1a1a"
+            position="sticky"
+  bottom="0"
           borderTop="1px solid #ddd"
         >
           <Textarea
             placeholder="Type a message..."
             p="4"
             pl="8"
-            color="black"
+            color="white"
             resize="none"
             rows={1}
             borderRadius="full"
