@@ -145,8 +145,6 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-
-
   }
 
   //generates title from message
@@ -280,67 +278,67 @@ export default function Home() {
   // }
 
   async function handleSendMessage() {
-  if (!userMsg.trim()) return; // ignore empty messages
+    if (!userMsg.trim()) return; // ignore empty messages
 
-  // 1️⃣ Create the user message object
-  const userMsgObj: Message = {
-    role: "user",
-    content: userMsg,
-  };
+    // 1️⃣ Create the user message object
+    const userMsgObj: Message = {
+      role: "user",
+      content: userMsg,
+    };
 
-  // 2️⃣ Clear input immediately
-  setUserMsg("");
+    // 2️⃣ Clear input immediately
+    setUserMsg("");
 
-  // 3️⃣ Prepare the updated messages array
-  const currentMessages = [...currentThread.messages, userMsgObj];
+    // 3️⃣ Prepare the updated messages array
+    const currentMessages = [...currentThread.messages, userMsgObj];
 
-  // 4️⃣ Generate title if this is the first message
-  let title = currentThread.title;
-  if (currentThread.messages.length === 0) {
-    try {
-      title = await generateTitleFromMessage(userMsg);
-    } catch {
-      title = "New Chat"; // fallback title
+    // 4️⃣ Generate title if this is the first message
+    let title = currentThread.title;
+    if (currentThread.messages.length === 0) {
+      try {
+        title = await generateTitleFromMessage(userMsg);
+      } catch {
+        title = "New Chat"; // fallback title
+      }
     }
-  }
 
-  // 5️⃣ Update the thread state with user message and title
-  setThread((prev) => {
-    const updated = [...prev];
-    updated[selectedThreadIndex] = {
-      ...updated[selectedThreadIndex],
-      messages: currentMessages,
-      title,
+    // 5️⃣ Update the thread state with user message and title
+    setThread((prev) => {
+      const updated = [...prev];
+      updated[selectedThreadIndex] = {
+        ...updated[selectedThreadIndex],
+        messages: currentMessages,
+        title,
+      };
+      return updated;
+    });
+
+    // 6️⃣ Send to AI
+    let data;
+    try {
+      data = await sendToMistral(currentMessages);
+    } catch {
+      data = null;
+    }
+
+    // 7️⃣ Create AI message object (or error message)
+    const aiResponse: Message = {
+      role: "assistant",
+      content:
+        data?.choices?.[0]?.message?.content ||
+        "Sorry, I could not process your request. Please try again.",
     };
-    return updated;
-  });
 
-  // 6️⃣ Send to AI
-  let data;
-  try {
-    data = await sendToMistral(currentMessages);
-  } catch {
-    data = null;
+    // 8️⃣ Update thread with AI response
+    setThread((prev) => {
+      const updated = [...prev];
+      updated[selectedThreadIndex] = {
+        ...updated[selectedThreadIndex],
+        messages: [...updated[selectedThreadIndex].messages, aiResponse],
+      };
+      return updated;
+    });
   }
-
-  // 7️⃣ Create AI message object (or error message)
-  const aiResponse: Message = {
-    role: "assistant",
-    content:
-      data?.choices?.[0]?.message?.content ||
-      "Sorry, I could not process your request. Please try again.",
-  };
-
-  // 8️⃣ Update thread with AI response
-  setThread((prev) => {
-    const updated = [...prev];
-    updated[selectedThreadIndex] = {
-      ...updated[selectedThreadIndex],
-      messages: [...updated[selectedThreadIndex].messages, aiResponse],
-    };
-    return updated;
-  });
-}
 
   //handles a rerun of the user's message incase of error
   async function retrySendMessage() {
@@ -421,22 +419,21 @@ export default function Home() {
       justify="space-between"
       userSelect="text"
       h="100vh"
-      bg="#e1cae8"
+      bg="#0a0a0a"
     >
       {/* contains the message */}
       <Flex
         flex="1"
         position="relative"
         direction="column"
-        width={isSmallScreen ? "100vw" : "90%"}
+        width={isSmallScreen ? "100vw" : "100vw"}
         userSelect="text"
-
       >
         <Box
           flex="1"
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
-          maxWidth={isSmallScreen ? "100%" : "90%"}
+          maxWidth={isSmallScreen ? "100%" : "100%"}
           height="100%"
           mx={isSmallScreen ? "none" : "auto"}
         >
@@ -470,7 +467,12 @@ export default function Home() {
           >
             {currentThread.messages.length === 0 ? (
               <Flex width="100%" align="center" justify="center" height="100vh">
-                <Box fontSize="2rem" textAlign="center" zIndex={3} color="black">
+                <Box
+                  fontSize="2rem"
+                  textAlign="center"
+                  zIndex={3}
+                  color="black"
+                >
                   Hello, how may I help you today?
                 </Box>
               </Flex>
@@ -489,8 +491,8 @@ export default function Home() {
                         </Avatar.Root>
                       )}
                       <Box
-                        bg={m.role === "user" ? "black" : "#f7edfc"}
-                        color={m.role === "user" ? "white" : "black"}
+                        bg={m.role === "user" ? "#2563eb" : "#262626"}
+                        color="white"
                         p="3"
                         rounded="lg"
                         maxW="100%"
@@ -545,8 +547,13 @@ export default function Home() {
         </Box>
 
         {/* Input */}
-        <Flex p="4" align="center" gap="2" 
-        bg="#e1cae8" borderTop="1px solid #ddd">
+        <Flex
+          p="4"
+          align="center"
+          gap="2"
+          bg="#0a0a0a"
+          borderTop="1px solid #ddd"
+        >
           <Textarea
             placeholder="Type a message..."
             p="4"
@@ -584,7 +591,7 @@ export default function Home() {
                 height="100vh"
                 backdropFilter="blur(4px)"
                 bg="rgba(255,255,255,0.2)"
-          zIndex={isSmallScreen ? "3" : ""}
+                zIndex={isSmallScreen ? "3" : ""}
               />
             )
           : ""}
@@ -596,7 +603,7 @@ export default function Home() {
           position={isSmallScreen ? "absolute" : "relative"}
           display={isSmallScreen ? "" : "block"}
           overflowY="auto"
-          bg="#e1cae8"
+          bg="#bababaff"
           height="100vh"
           width={isSmallScreen ? "65%" : "30%"}
           maxW={isSmallScreen ? "" : "25%"}
@@ -604,8 +611,14 @@ export default function Home() {
           zIndex={isSmallScreen ? "5" : ""}
         >
           <Flex justify="space-between" mb="8">
-            <Button onClick={createNewChat}>New Chat</Button>
-            {isSmallScreen && <Button onClick={closeSideBar}>X</Button>}
+            <Button onClick={createNewChat} bg="black" color="white">
+              New Chat
+            </Button>
+            {isSmallScreen && (
+              <Button onClick={closeSideBar} bg="black" color="white">
+                X
+              </Button>
+            )}
           </Flex>
 
           <Text color="black">Chats</Text>
