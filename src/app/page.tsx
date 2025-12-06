@@ -428,6 +428,7 @@ export default function Home() {
         direction="column"
         width={isSmallScreen ? "100vw" : "100vw"}
         userSelect="text"
+        height="100dvh"
       >
         <Box
           flex="1"
@@ -471,7 +472,7 @@ export default function Home() {
                   fontSize="2rem"
                   textAlign="center"
                   zIndex={3}
-                  color="black"
+                  color="white"
                 >
                   Hello, how may I help you today?
                 </Box>
@@ -555,6 +556,7 @@ export default function Home() {
             position="sticky"
   bottom="0"
           borderTop="1px solid #ddd"
+          zIndex="20"
         >
           <Textarea
             placeholder="Type a message..."
