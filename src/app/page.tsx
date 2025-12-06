@@ -1,37 +1,20 @@
 "use client";
-import ReactMarkdown from "react-markdown";
-import {
-  Box,
-  Flex,
-  Text,
-  Input,
-  Button,
-  VStack,
-  ListItem,
-  List,
-  Textarea,
-  useMediaQuery,
-  Avatar,
-  Spinner,
-} from "@chakra-ui/react";
-import { JSX, useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import { Box, Flex, useMediaQuery} from "@chakra-ui/react";
+import { useState, useRef, useEffect } from "react";
+import ChatInput from "@/components/ui/chatInput";
+import Sidebar from "@/components/ui/sidebar";
+import MessagePart from "@/components/ui/messages";
 
 //interfaces
-interface Message {
-  // id: string;
+export interface Message {
   role: "user" | "assistant";
   content: string;
-  // createdAt: string;
-  // updatedAt?: string;
 }
 
-interface Thread {
+export interface Thread {
   id: string;
   title: string;
   messages: Message[];
-  // createdAt?: string;
-  // updatedAt?: string;
 }
 
 export default function Home() {
@@ -148,22 +131,6 @@ export default function Home() {
   }
 
   //generates title from message
-  // function createTitleFromMessage(text: string) {
-  //   // remove emojis, extra spaces
-  //   text = text
-  //     .replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "")
-  //     .trim();
-
-  //   // If text is too long, shorten it
-  //   if (text.length > 30) {
-  //     text = text.slice(0, 30) + "...";
-  //   }
-
-  //   // Capitalize first letter
-  //   return text.charAt(0).toUpperCase() + text.slice(1);
-  // }
-
-  //generates title from message
   async function generateTitleFromMessage(message: string) {
     try {
       const res = await fetch("/api/mistral", {
@@ -204,78 +171,6 @@ export default function Home() {
     });
     closeSideBar();
   }
-
-  //handles sending and receiving messages
-  // async function handleSendMessage() {
-  //   if (!userMsg.trim()) return; // ignore empty messages
-
-  //   // 1. create user message object
-  //   const userMsgObj: Message = {
-  //     // id: crypto.randomUUID(),
-  //     role: "user",
-  //     content: userMsg,
-  //   };
-
-  //   // 2. update thread immediately
-  //   setThread((prev) => {
-  //     const updated = [...prev];
-  //     updated[selectedThreadIndex] = {
-  //       ...updated[selectedThreadIndex],
-  //       messages: [...updated[selectedThreadIndex].messages, userMsgObj],
-  //     };
-  //     return updated;
-  //   });
-
-  //   // 3. saves last message, for a retry incase of error
-  //   setLastMsg(userMsg);
-
-  //   // 4. clear input
-  //   setUserMsg("");
-
-  //   //5. generating title
-  //   //If this is the FIRST message, generate a title
-  //   if (currentThread.messages.length === 0) {
-  //     const title = await generateTitleFromMessage(userMsg);
-  //     setThread((prev) => {
-  //       const updated = [...prev];
-  //       updated[selectedThreadIndex] = {
-  //         ...updated[selectedThreadIndex],
-  //         title,
-  //       };
-  //       return updated;
-  //     });
-  //   }
-
-  //   // 4. send to Mistral with the correct updated array
-  //   const messagesToSend = [...currentThread.messages, userMsgObj]; // include new message
-  //   const data = await sendToMistral(messagesToSend);
-
-  //   //handles error incase data
-  //   if (!data) {
-  //     // push an AI error message instead of normal content
-  //     setError("An unexpected error occurred, please try again.");
-
-  //     return;
-  //   }
-
-  //   // 6. create AI message object
-  //   const aiResponse: Message = {
-  //     // id: crypto.randomUUID(),
-  //     role: "assistant",
-  //     content: data?.choices?.[0]?.message?.content,
-  //     // updatedAt: new Date().toISOString(),
-  //   };
-
-  //   // 7. update thread with AI response
-  //   setThread((prev) => {
-  //     const updated = [...prev];
-  //     updated[selectedThreadIndex] = {
-  //       ...updated[selectedThreadIndex],
-  //       messages: [...updated[selectedThreadIndex].messages, aiResponse],
-  //     };
-  //     return updated;
-  //   });
-  // }
 
   async function handleSendMessage() {
     if (!userMsg.trim()) return; // ignore empty messages
@@ -426,7 +321,7 @@ export default function Home() {
         flex="1"
         position="relative"
         direction="column"
-        width="100vw"
+        width="100%"
         userSelect="text"
         minH="0"
       >
@@ -455,131 +350,21 @@ export default function Home() {
           )}
 
           {/* message side */}
-          <VStack
-            align="stretch"
-            gap="3"
-            onClick={closeSideBar}
-            minH="0"
-            userSelect="text"
-          >
-            {currentThread.messages.length === 0 ? (
-              <Flex width="100%" align="center" justify="center" height="100vh">
-                <Box
-                  fontSize="2rem"
-                  textAlign="center"
-                  zIndex={3}
-                  color="white"
-                >
-                  Hello, how may I help you today?
-                </Box>
-              </Flex>
-            ) : (
-              currentThread.messages.map((m, i): JSX.Element => {
-                return (
-                  <Flex
-                    key={i}
-                    justify={m.role === "user" ? "flex-end" : "flex-start"}
-                  >
-                    <Flex align="flex-start" gap="2">
-                      {m.role !== "user" && (
-                        <Avatar.Root>
-                          <Avatar.Image src="https://bit.ly/broken-link" />
-                          <Avatar.Fallback>AI</Avatar.Fallback>
-                        </Avatar.Root>
-                      )}
-                      <Box
-                        bg={m.role === "user" ? "#2563eb" : "#262626"}
-                        color="white"
-                        p="3"
-                        rounded="lg"
-                        maxW="100%"
-                        userSelect="text"
-                        css={{
-                          "& *": {
-                            userSelect: "text",
-                            cursor: "text",
-                          },
-                        }}
-                      >
-                        <ReactMarkdown>{m.content}</ReactMarkdown>
-                      </Box>
-                      <div ref={bottomRef}></div>
-                    </Flex>
-                  </Flex>
-                );
-              })
-            )}
-
-            {/* //when ai response is loading */}
-            {loading && (
-              <Flex justify="flex-start">
-                <Flex align="flex-start" gap="2">
-                  <Avatar.Root>
-                    <Avatar.Image src="https://bit.ly/broken-link" />
-                    <Avatar.Fallback>AI</Avatar.Fallback>
-                  </Avatar.Root>
-                  <Box p="3" rounded="lg">
-                    <Spinner />
-                  </Box>
-                </Flex>
-              </Flex>
-            )}
-
-            {/* when theres an error */}
-            {error && (
-              <Flex justify="flex-start">
-                <Flex align="flex-start" gap="2">
-                  <Avatar.Root>
-                    <Avatar.Image src="https://bit.ly/broken-link" />
-                    <Avatar.Fallback>AI</Avatar.Fallback>
-                  </Avatar.Root>
-                  <Box bg="red.100" color="red.700" p="3" mb="4" rounded="md">
-                    {error}
-                  </Box>
-                  <Button onClick={retrySendMessage}>⟳</Button>
-                </Flex>
-              </Flex>
-            )}
-          </VStack>
+          <MessagePart
+            closeSideBar={closeSideBar}
+            currentThread={currentThread}
+            bottomRef={bottomRef}
+            loading={loading}
+            error={error}
+            retrySendMessage={retrySendMessage}
+          />
         </Box>
 
-        {/* Input */}
-        <Flex
-          p="4"
-          align="center"
-          gap="2"
-          bg="#1a1a1a"
-          position="sticky"
-          bottom="0"
-          borderTop="1px solid #ddd"
-          zIndex="20"
-        >
-          <Textarea
-            placeholder="Type a message..."
-            p="4"
-            pl="8"
-            color="white"
-            resize="none"
-            rows={1}
-            borderRadius="full"
-            value={userMsg}
-            onChange={(e) => setUserMsg(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
-          />
-          <Button
-            color="white"
-            bg="black"
-            disabled={!userMsg.trim()}
-            onClick={handleSendMessage}
-          >
-            Send
-          </Button>
-        </Flex>
+        <ChatInput
+          userMsg={userMsg}
+          setUserMsg={setUserMsg}
+          handleSendMessage={handleSendMessage}
+        />
 
         {isSmallScreen
           ? isOpen && (
@@ -598,62 +383,15 @@ export default function Home() {
       </Flex>
 
       {/*side bar*/}
-      {(!isSmallScreen || isOpen) && (
-        <Box
-          position={isSmallScreen ? "absolute" : "relative"}
-          display={isSmallScreen ? "" : "block"}
-          overflowY="auto"
-          bg="#bababaff"
-          height="100vh"
-          width={isSmallScreen ? "65%" : "30%"}
-          maxW={isSmallScreen ? "" : "25%"}
-          p="4"
-          zIndex={isSmallScreen ? "5" : ""}
-        >
-          <Flex justify="space-between" mb="8">
-            <Button onClick={createNewChat} bg="black" color="white">
-              New Chat
-            </Button>
-            {isSmallScreen && (
-              <Button onClick={closeSideBar} bg="black" color="white">
-                X
-              </Button>
-            )}
-          </Flex>
-
-          <Text color="black">Chats</Text>
-          <List.Root cursor="pointer" listStyle="none">
-            {thread.map((t, i) => (
-              //added event listener for navigating threads
-              <Flex key={t.id} justify="space-between" alignItems="center">
-                <ListItem
-                  py="3"
-                  color="black"
-                  onClick={() => {
-                    setSelectedThreadIndex(i);
-                    closeSideBar();
-                  }}
-                >
-                  {t.title}
-                </ListItem>
-                <Button
-                  bg="transparent"
-                  color="black"
-                  fontSize="18px"
-                  fontWeight="700"
-                  cursor="pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteThread(t.id);
-                  }}
-                >
-                  <Image src="/trash.png" width={15} height={15} alt="delete" />
-                </Button>
-              </Flex>
-            ))}
-          </List.Root>
-        </Box>
-      )}
+      <Sidebar
+        isSmallScreen={isSmallScreen}
+        isOpen={isOpen}
+        createNewChat={createNewChat}
+        closeSideBar={closeSideBar}
+        thread={thread}
+        setSelectedThreadIndex={setSelectedThreadIndex}
+        deleteThread={deleteThread}
+      />
     </Flex>
   );
 }
