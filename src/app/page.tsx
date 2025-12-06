@@ -428,6 +428,7 @@ export default function Home() {
         direction="column"
         width="100vw"
         userSelect="text"
+        minH="0"
       >
         <Box
           flex="1"
@@ -458,12 +459,7 @@ export default function Home() {
             align="stretch"
             gap="3"
             onClick={closeSideBar}
-            //             onClick={(e) => {
-            //   // Only close if clicking the VStack itself, not children
-            //   if (e.target === e.currentTarget) {
-            //     closeSideBar();
-            //   }
-            // }}
+            minH="0"
             userSelect="text"
           >
             {currentThread.messages.length === 0 ? (
@@ -553,8 +549,8 @@ export default function Home() {
           align="center"
           gap="2"
           bg="#1a1a1a"
-            position="sticky"
-  bottom="0"
+          position="sticky"
+          bottom="0"
           borderTop="1px solid #ddd"
           zIndex="20"
         >
