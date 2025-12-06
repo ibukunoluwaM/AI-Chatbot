@@ -82,7 +82,7 @@ interface MessageProp {
                     <Avatar.Fallback>AI</Avatar.Fallback>
                   </Avatar.Root>
                   <Box p="3" rounded="lg">
-                    <Spinner />
+                    <Spinner color="white" size="lg" />
                   </Box>
                 </Flex>
               </Flex>
