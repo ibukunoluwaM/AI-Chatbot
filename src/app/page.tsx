@@ -426,15 +426,15 @@ export default function Home() {
         flex="1"
         position="relative"
         direction="column"
-        width={isSmallScreen ? "100vw" : "100vw"}
+        width="100vw"
         userSelect="text"
-        height="100dvh"
       >
         <Box
           flex="1"
           overflowY={currentThread.messages.length === 0 ? "hidden" : "auto"}
           p="4"
-          maxWidth={isSmallScreen ? "100%" : "100%"}
+          width="100%"
+          // maxWidth={isSmallScreen ? "100%" : "100%"}
           height="100%"
           mx={isSmallScreen ? "none" : "auto"}
         >
